@@ -1,0 +1,18 @@
+{
+  "name": "减脂小屋",
+  "short_name": "减脂小屋",
+  "description": "小白和小鸡毛的双人减脂记录 App",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8faf4",
+  "theme_color": "#2f7d57",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
