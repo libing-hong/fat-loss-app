@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>减脂小屋</title>
+    <link rel="manifest" href="./manifest.json" />
+    <meta name="theme-color" content="#2f7d57" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="减脂小屋" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">2</span>
+          <div>
+            <h1>减脂小屋</h1>
+            <p>双人私用</p>
+          </div>
+        </div>
+
+        <div class="profile-switch" role="tablist" aria-label="选择成员">
+          <button class="person-tab active" data-person="me" type="button">
+            <span>小白</span>
+            <strong id="meWeightMini">-- kg</strong>
+          </button>
+          <button class="person-tab" data-person="partner" type="button">
+            <span>小鸡毛</span>
+            <strong id="partnerWeightMini">-- kg</strong>
+          </button>
+        </div>
+
+        <nav class="nav-list" aria-label="主要区域">
+          <button class="nav-item active" data-view="dashboard" type="button">总览</button>
+          <button class="nav-item" data-view="log" type="button">今日</button>
+          <button class="nav-item" data-view="meals" type="button">食谱</button>
+          <button class="nav-item" data-view="sync" type="button">同步</button>
+          <button class="nav-item" data-view="settings" type="button">档案</button>
+        </nav>
+      </aside>
+
+      <section class="content">
+        <header class="topbar">
+          <div>
+            <p id="todayLabel" class="eyebrow"></p>
+            <h2 id="screenTitle">总览</h2>
+          </div>
+          <div class="actions">
+            <button class="icon-button" id="exportBtn" type="button" title="导出数据">↓</button>
+            <button class="secondary-button" id="installBtn" type="button">安装 App</button>
+            <button class="primary-button" id="todayBtn" type="button">今天记录</button>
+          </div>
+        </header>
+
+        <section class="view active" id="dashboardView">
+          <section class="game-hero">
+            <div>
+              <p class="eyebrow">本周双人挑战</p>
+              <h3 id="duoTitle">一起把这周过漂亮</h3>
+              <p id="duoHint">完成饮水、运动、睡眠和记录任务，会自动点亮路线。</p>
+            </div>
+            <div class="level-badge">
+              <span>Lv.</span>
+              <strong id="levelValue">1</strong>
+            </div>
+          </section>
+
+          <div class="duo-grid">
+            <article class="player-card" id="meCard"></article>
+            <article class="player-card" id="partnerCard"></article>
+          </div>
+
+          <section class="quest-board">
+            <div class="panel-head">
+              <h3>今日任务</h3>
+              <span id="questProgress">0 / 8</span>
+            </div>
+            <div class="quest-grid" id="questGrid"></div>
+          </section>
+
+          <section class="map-panel">
+            <div class="panel-head">
+              <h3>七日路线</h3>
+              <span id="weekAverage">--</span>
+            </div>
+            <div class="path-track" id="pathTrack"></div>
+          </section>
+
+          <div class="dashboard-split">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>体重趋势</h3>
+                <span>最近 14 天</span>
+              </div>
+              <canvas id="weightChart" height="170"></canvas>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>徽章墙</h3>
+                <span id="badgeCount">0 枚</span>
+              </div>
+              <div class="badge-grid" id="badgeGrid"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="logView">
+          <form class="form-grid" id="dailyForm">
+            <label>
+              <span>日期</span>
+              <input id="entryDate" name="date" type="date" required />
+            </label>
+            <label>
+              <span>体重 kg</span>
+              <input id="weight" name="weight" type="number" inputmode="decimal" min="30" max="250" step="0.1" />
+            </label>
+            <label>
+              <span>步数</span>
+              <input id="steps" name="steps" type="number" inputmode="numeric" min="0" max="60000" step="100" />
+            </label>
+            <label>
+              <span>运动分钟</span>
+              <input id="exercise" name="exercise" type="number" inputmode="numeric" min="0" max="360" step="1" />
+            </label>
+            <label>
+              <span>饮水 ml</span>
+              <input id="water" name="water" type="number" inputmode="numeric" min="0" max="6000" step="50" />
+            </label>
+            <label>
+              <span>摄入 kcal</span>
+              <input id="calories" name="calories" type="number" inputmode="numeric" min="0" max="6000" step="10" />
+            </label>
+            <label>
+              <span>睡眠小时</span>
+              <input id="sleep" name="sleep" type="number" inputmode="decimal" min="0" max="14" step="0.1" />
+            </label>
+            <label>
+              <span>心情</span>
+              <select id="mood" name="mood">
+                <option value="">未选择</option>
+                <option value="轻松">轻松</option>
+                <option value="稳定">稳定</option>
+                <option value="疲惫">疲惫</option>
+                <option value="很饿">很饿</option>
+              </select>
+            </label>
+            <label class="wide">
+              <span>备注</span>
+              <textarea id="notes" name="notes" rows="3" placeholder="经期、外食、压力、胃口、训练感受"></textarea>
+            </label>
+            <div class="form-actions wide">
+              <button class="secondary-button" id="copyYesterdayBtn" type="button">沿用昨天</button>
+              <button class="primary-button" type="submit">保存记录</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="view" id="mealsView">
+          <div class="meal-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>冰箱</h3>
+                <button class="ghost-button" id="clearFridgeBtn" type="button">清空</button>
+              </div>
+              <form class="fridge-form" id="fridgeForm">
+                <input id="fridgeInput" type="text" placeholder="鸡胸肉、鸡蛋、西兰花、豆腐" />
+                <button class="primary-button" type="submit">加入</button>
+              </form>
+              <div class="chip-list" id="fridgeList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>偏好</h3>
+                <span id="calorieTargetLabel">-- kcal</span>
+              </div>
+              <div class="preference-grid">
+                <label>
+                  <span>饱腹感</span>
+                  <select id="satiety">
+                    <option value="high">高</option>
+                    <option value="medium">中</option>
+                  </select>
+                </label>
+                <label>
+                  <span>烹饪时间</span>
+                  <select id="cookTime">
+                    <option value="quick">30 分钟内</option>
+                    <option value="normal">45 分钟内</option>
+                  </select>
+                </label>
+              </div>
+              <button class="primary-button full" id="generateMealsBtn" type="button">生成本周菜单</button>
+            </section>
+          </div>
+
+          <section class="menu-grid" id="menuGrid"></section>
+        </section>
+
+        <section class="view" id="syncView">
+          <section class="sync-hero">
+            <div>
+              <p class="eyebrow">设备同步蓝图</p>
+              <h3>Apple Watch + Samsung Watch 可以在这里汇合</h3>
+              <p>当前版本支持本地记录和同步包交换；自动抓取手表数据需要手机端 HealthKit / Samsung Health 权限和一个私有同步服务。</p>
+            </div>
+          </section>
+
+          <div class="device-grid">
+            <article class="device-card">
+              <span>男朋友</span>
+              <h3>Apple Watch</h3>
+              <p>来源：Apple Health / HealthKit</p>
+              <strong id="partnerSyncStatus">等待连接</strong>
+            </article>
+            <article class="device-card">
+              <span>我</span>
+              <h3>Samsung Watch</h3>
+              <p>来源：Samsung Health</p>
+              <strong id="meSyncStatus">等待连接</strong>
+            </article>
+          </div>
+
+          <div class="sync-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>生成我的同步包</h3>
+                <span>给对方导入</span>
+              </div>
+              <textarea id="syncOutput" rows="7" readonly></textarea>
+              <div class="form-actions">
+                <button class="secondary-button" id="pairCodeBtn" type="button">生成配对码</button>
+                <button class="primary-button" id="makeSyncBtn" type="button">生成同步包</button>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>导入对方同步包</h3>
+                <span>更新对方变化</span>
+              </div>
+              <textarea id="syncInput" rows="7" placeholder="把对方导出的同步包粘贴到这里"></textarea>
+              <div class="form-actions">
+                <button class="primary-button" id="importSyncBtn" type="button">导入</button>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>之后真正自动同步需要</h3>
+              <span>升级路线</span>
+            </div>
+            <div class="roadmap">
+              <div><strong>1</strong><span>手机 App 读取健康权限</span></div>
+              <div><strong>2</strong><span>私有账号和双人绑定</span></div>
+              <div><strong>3</strong><span>加密同步体重、步数、运动、睡眠</span></div>
+              <div><strong>4</strong><span>双方只看彼此授权的数据</span></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="settingsView">
+          <form class="form-grid" id="profileForm">
+            <label>
+              <span>昵称</span>
+              <input id="profileName" name="name" type="text" />
+            </label>
+            <label>
+              <span>类型</span>
+              <select id="profileType" name="type">
+                <option value="small">小基数</option>
+                <option value="large">大基数</option>
+              </select>
+            </label>
+            <label>
+              <span>身高 cm</span>
+              <input id="height" name="height" type="number" min="120" max="220" step="1" />
+            </label>
+            <label>
+              <span>当前体重 kg</span>
+              <input id="currentWeight" name="currentWeight" type="number" min="30" max="250" step="0.1" />
+            </label>
+            <label>
+              <span>目标体重 kg</span>
+              <input id="goalWeight" name="goalWeight" type="number" min="30" max="250" step="0.1" />
+            </label>
+            <label>
+              <span>日目标 kcal</span>
+              <input id="calorieTarget" name="calorieTarget" type="number" min="900" max="4000" step="10" />
+            </label>
+            <div class="form-actions wide">
+              <button class="primary-button" type="submit">保存档案</button>
+            </div>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>
